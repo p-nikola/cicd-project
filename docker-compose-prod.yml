@@ -20,7 +20,7 @@ services:
       - ADMIN_PASSWORD=${admin_password}
       - VIRTUAL_HOST=${virtual_host_backend}
       - LETSENCRYPT_HOST=${letsencrypt_host_backend}
-      - LETSENCRYPT_EMAIL=${letsencypt_email}
+      - LETSENCRYPT_EMAIL=${letsencrypt_email}
     ports:
       - "8000:8000"
     labels:
