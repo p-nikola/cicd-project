@@ -67,6 +67,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
             cd ~/project
+
+            # Decode and create .env file
+            echo "${{ secrets.ENV_FILE }}" | base64 -d > .env
             
             # Pull latest images
             docker compose -f docker-compose-prod.yml pull
