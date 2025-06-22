@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - proxy-tier
+
+  backend:
+    image: pnikola/game-backend:latest
+    restart: always
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=${mongo_url}
+      - ADMIN_USERNAME=${admin_username}
+      - ADMIN_PASSWORD=${admin_password}
+      - VIRTUAL_HOST=${virtual_host_backend}
+      - LETSENCRYPT_HOST=${letsencrypt_host_backend}
+      - LETSENCRYPT_EMAIL=${letsencypt_email}
+    ports:
+      - "8000:8000"
+    labels:
+      - "com.github.nginx.proxy_port=8000"
+    networks:
+      - proxy-tier
+
+  frontend:
+    image: pnikola/game-frontend:latest
+    restart: always
+    environment:
+      - VIRTUAL_HOST=${virtual_host_frontend}
+      - LETSENCRYPT_HOST=${letsencrypt_host_frontend}
+      - LETSENCRYPT_EMAIL=${letsencrypt_email}
+    networks:
+      - proxy-tier
+
+
+  proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+    networks:
+      - proxy-tier
+
+  letsencrypt:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    restart: always
+    environment:
+      - DEFAULT_EMAIL=opasen.batka@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - acme:/etc/acme.sh
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+    depends_on:
+      - proxy
+    networks:
+      - proxy-tier
+
+volumes:
+  mongo-data:
+  certs:
+  vhost:
+  html:
+  acme:
+
+
+networks:
+  proxy-tier:
+    external: true
