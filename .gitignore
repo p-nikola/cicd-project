@@ -1,6 +1,12 @@
-.env-local
-.env-prod
+/local/.env-local
+/prod/.env-prod
 /app/.env
+
+*.env
+*.env.*
+.env*
+!.env.example
+!.env.template
 
 __pycache__/
 *.pyc

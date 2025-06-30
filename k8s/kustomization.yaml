@@ -1,4 +1,3 @@
-# k8s/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -6,7 +5,6 @@ metadata:
   name: game-app
   namespace: game-app
 
-# Apply resources in order
 resources:
   - namespace.yaml
   - secrets.yaml
@@ -16,14 +14,12 @@ resources:
   - services.yaml
   - ingress.yaml
 
-# Common labels for all resources
 labels:
   - pairs:
       app.kubernetes.io/name: game-app
       app.kubernetes.io/version: v1.0
       app.kubernetes.io/component: web-app
 
-# Common annotations
 commonAnnotations:
   managed-by: kustomize
   project: game-management-system

@@ -54,8 +54,9 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.SSH_PORT }}
-        source: "docker-compose-prod.yml"
+        source: "prod/docker-compose.yml"
         target: "~/project/"
+        strip_components: 1
         
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.0
@@ -79,17 +80,17 @@ jobs:
             echo "${{ secrets.ENV_FILE }}" | base64 -d > .env
             
             # Stop existing containers
-            docker compose -f docker-compose-prod.yml down
+            docker compose down
 
             # Pull latest images
-            docker compose -f docker-compose-prod.yml pull
+            docker compose pull
             
             # Start with new images
-            docker compose -f docker-compose-prod.yml up -d
+            docker compose up -d
             
             # Clean up old images
             docker image prune -f
             
             echo "Deployment completed successfully."
-            docker compose -f docker-compose-prod.yml ps
+            docker compose ps
 
