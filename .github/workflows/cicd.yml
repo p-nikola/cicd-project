@@ -71,11 +71,11 @@ jobs:
             # Decode and create .env file
             echo "${{ secrets.ENV_FILE }}" | base64 -d > .env
             
-            # Pull latest images
-            docker compose -f docker-compose-prod.yml pull
-            
             # Stop existing containers
             docker compose -f docker-compose-prod.yml down
+
+            # Pull latest images
+            docker compose -f docker-compose-prod.yml pull
             
             # Start with new images
             docker compose -f docker-compose-prod.yml up -d

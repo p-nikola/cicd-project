@@ -9,6 +9,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:8080",             # dev
+        "http://game.local",                 # k8s frontend
+        "http://api.local",                  # k8s backend
         "https://safetycrew.xyz",            # frontend domain
         "https://test.safetycrew.xyz"        # backend domain
     ],

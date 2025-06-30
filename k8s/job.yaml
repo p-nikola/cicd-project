@@ -1,0 +1,29 @@
+# k8s/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-replica-set-init
+  namespace: game-app
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: mongo-init
+        image: mongo:6
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            echo "Initializing MongoDB replica set..."
+            mongosh --host mongo-0.mongo:27017 --eval "
+            rs.initiate({
+              _id: 'rs0',
+              members: [
+                { _id: 0, host: 'mongo-0.mongo:27017', priority: 2 },
+                { _id: 1, host: 'mongo-1.mongo:27017', priority: 1 },
+                { _id: 2, host: 'mongo-2.mongo:27017', priority: 1 }
+              ]
+            });
+            print('Replica set initialized!');
+            "
+            echo "Done!"
