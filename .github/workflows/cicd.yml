@@ -66,6 +66,13 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.SSH_PORT }}
         script: |
+            if [ ! -d ~/project ]; then
+              echo "Creating project directory..."
+              mkdir -p ~/project
+            else
+              echo "Project directory already exists."
+            fi
+
             cd ~/project
 
             # Decode and create .env file
@@ -82,3 +89,7 @@ jobs:
             
             # Clean up old images
             docker image prune -f
+            
+            echo "Deployment completed successfully."
+            docker compose -f docker-compose-prod.yml ps
+
