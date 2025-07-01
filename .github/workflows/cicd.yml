@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ master,dev ]
 
 jobs:
   docker:
@@ -55,7 +55,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.SSH_PORT }}
         source: "prod/docker-compose.yml"
-        target: "~/project/"
+        target: "~/"
         strip_components: 1
         
     - name: Deploy to server
@@ -72,6 +72,10 @@ jobs:
               mkdir -p ~/project
             else
               echo "Project directory already exists."
+            fi
+
+            if [ -f ~/docker-compose.yml ]; then
+              mv ~/docker-compose.yml ~/project/
             fi
 
             cd ~/project
