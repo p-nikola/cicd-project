@@ -10,10 +10,13 @@ resources:
   - secrets.yaml
   - configmap.yaml
   - mongo-statefulset.yaml
-  - app-deployment.yaml
-  - services.yaml
+  - backend.yaml
+  - frontend.yaml
+  - backend-service.yaml
+  - frontend-service.yaml
+  - mongo-service.yaml
   - ingress.yaml
-
+  
 labels:
   - pairs:
       app.kubernetes.io/name: game-app

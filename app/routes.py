@@ -3,7 +3,7 @@ from models import Game
 from database import games_collection
 from bson.objectid import ObjectId
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-import os, secrets
+import os, secrets,socket
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -44,3 +44,7 @@ def delete_game(game_id: str, user: str = Depends(get_current_user)):
     if result.deleted_count:
         return {"message": "Game deleted"}
     raise HTTPException(404, "Game not found")
+
+@router.get("/hello", include_in_schema=False)
+def healthcheck():
+    return {"status": "hello world", "hostname": socket.gethostname()}

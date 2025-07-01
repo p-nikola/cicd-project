@@ -1,5 +1,5 @@
-/local/.env-local
-/prod/.env-prod
+/local/.env
+/prod/.env
 /app/.env
 
 *.env
