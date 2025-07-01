@@ -75,6 +75,7 @@ jobs:
             fi
 
             if [ -f ~/docker-compose.yml ]; then
+              echo "Moving docker-compose.yml to project directory..."
               mv ~/docker-compose.yml ~/project/
             fi
 
